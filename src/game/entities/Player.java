@@ -3,6 +3,7 @@ package game.entities;
 import game.Game;
 import game.actions.DashAction;
 import game.actions.MeleeAttackAction;
+import game.actions.ShootProjectileAction;
 import game.entities.components.*;
 import game.entities.components.graphics.RectGraphicsComponent;
 import game.entities.components.listener.CollisionListener;
@@ -23,7 +24,7 @@ public class Player extends Entity {
 		this.addComponent(new InputMovementComponent(game, this, 5));
 		this.addComponent(new CollisionComponent(this));
 		this.addComponent(new KnockbackComponent(this));
-		this.addComponent(new ActionComponent(this, new MeleeAttackAction(), new DashAction()));
+		this.addComponent(new ActionComponent(this, new ShootProjectileAction(), new DashAction()));
 		this.addComponent(new CollisionListener(this) {
 			@Override
 			public void onCollide(Collision c) {

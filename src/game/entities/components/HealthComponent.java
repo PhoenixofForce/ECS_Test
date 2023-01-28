@@ -1,5 +1,7 @@
 package game.entities.components;
 
+import data.Ease;
+import data.SmoothFloat;
 import game.Game;
 import game.entities.Entity;
 
@@ -8,19 +10,19 @@ public class HealthComponent extends Component {
 	private CooldownComponent cooldown;
 
 	private int maxHealth;
-	private int currentHealth;
+	private SmoothFloat currentHealth;
 
 	private int invincibleTicks = 0;
 
 	public HealthComponent(Entity e, int maxHealth) {
 		super(e);
 		this.maxHealth = maxHealth;
-		this.currentHealth = maxHealth;
+		this.currentHealth = new SmoothFloat(Ease::easeInBounce, maxHealth);
 
 		this.cooldown = new CooldownComponent(10);
 	}
 
-	public int getCurrentHealth() {
+	public SmoothFloat getCurrentHealth() {
 		return currentHealth;
 	}
 
@@ -34,21 +36,22 @@ public class HealthComponent extends Component {
 
 	public void damage(int damage, boolean ignoreInvincible) {
 		if(cooldown.canConsume() && (!isInvincible() || ignoreInvincible)) {
-			this.currentHealth -= damage;
+			this.currentHealth.subSmooth(damage);
 			cooldown.consume();
 		}
 	}
 
 	public void heal(int toHeal) {
-		this.currentHealth = Math.max(maxHealth, currentHealth + toHeal);
+		this.currentHealth.addSmooth(Math.min(toHeal, maxHealth - currentHealth.getActualValue()));
+
 	}
 
 	public void overheal(int toHeal) {
-		this.currentHealth = currentHealth + toHeal;
+		currentHealth.addSmooth(toHeal);
 	}
 
 	public void heal() {
-		this.currentHealth = maxHealth;
+		this.currentHealth.setSmooth(maxHealth);
 	}
 
 	public void increaseMaxHealth(int toAdd) {
@@ -58,8 +61,9 @@ public class HealthComponent extends Component {
 	@Override
 	public void update(Game game) {
 		cooldown.update(game);
+		currentHealth.update();
 
-		if(currentHealth <= 0) {
+		if(currentHealth.getValue() <= 0) {
 			game.removeEntity(entity);
 		}
 

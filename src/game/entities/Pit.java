@@ -41,7 +41,7 @@ public class Pit extends Entity {
 
 					if(collider.hasComponent(HealthComponent.class) && !collider.hasTag("onPlatform") && !collider.hasTag("inPit")) {
 						HealthComponent hc = collider.getComponent(HealthComponent.class);
-						hc.damage(hc.getCurrentHealth() / 2, true);
+						hc.damage((int) (hc.getCurrentHealth().getValue() / 2), true);
 
 						Vec2D dir = c.getOldPosition().clone().sub(c.getCollisionPosition());
 						dropIntoPit(collider, dir.normalize(32));
@@ -77,7 +77,7 @@ public class Pit extends Entity {
 		e.getComponent(GraphicsComponent.class).disable();
 		e.getComponent(MovementComponent.class).disable();
 		e.getComponent(CollisionComponent.class).disable();
-		e.getComponent(HealthComponent.class).disable();
+		//e.getComponent(HealthComponent.class).disable();
 		if(e.hasComponent(KnockbackComponent.class)) {
 			KnockbackComponent kc = e.getComponent(KnockbackComponent.class);
 			kc.setKnockback(0, 0);

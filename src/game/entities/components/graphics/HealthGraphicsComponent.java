@@ -40,7 +40,11 @@ public class HealthGraphicsComponent extends GraphicsComponent {
 		g.setColor(c.darker().darker());
 		g.fillRect(pos.getX(), pos.getY(), pos.getW(), pos.getH());
 
-		double healthWidth = MathUtil.map(hc.getCurrentHealth(), 0, hc.getMaxHealth(), 0, pos.getSize().x);
+		double healthWidth = MathUtil.map(hc.getCurrentHealth().getValue(), 0, hc.getMaxHealth(), 0, pos.getSize().x);
+		g.setColor(c.darker());
+		g.fillRect(pos.getX(), pos.getY(), (int) healthWidth, pos.getH());
+
+		healthWidth = MathUtil.map(hc.getCurrentHealth().getActualValue(), 0, hc.getMaxHealth(), 0, pos.getSize().x);
 		g.setColor(c);
 		g.fillRect(pos.getX(), pos.getY(), (int) healthWidth, pos.getH());
 	}
